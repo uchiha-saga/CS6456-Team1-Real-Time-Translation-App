@@ -1,11 +1,25 @@
 import MyMessage from "./MyMessage";
 import TheirMessage from "./TheirMessage";
 import MessageForm from "./MessageForm";
+import React, { useEffect } from "react";
 
 const ChatFeed = (props) => {
     const { chats, activeChat, userName, messages } = props;
 
     const chat = chats && chats[activeChat];
+
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src =
+            "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+    
 
     const handleLogout = () => {
         localStorage.removeItem("username");
@@ -77,7 +91,11 @@ const ChatFeed = (props) => {
                 <div className="chat-title">{chat?.title}</div>
                 <div className="chat-subtitle">
                     {chat.people.map((person) => ` ${person.person.username}`)}
+                <div className="chat-subtitle" id="google_translate_element"></div>
+                <div id="google_translate_element"></div> {/* Google Translate element */}
+                
                 </div>
+                
             </div>
             {renderMessages()}
             <div style={{ height: "100px" }} />
@@ -85,6 +103,7 @@ const ChatFeed = (props) => {
                 <MessageForm {...props} chatId={activeChat} />
             </div>
         </div>
+        
     );
 };
 
